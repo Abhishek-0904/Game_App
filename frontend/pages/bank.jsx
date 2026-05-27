@@ -45,10 +45,10 @@ function Bank() {
                     </thead>
                     <tbody>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{ }</td>
+                            <td>{ }</td>
+                            <td>{ }</td>
+                            <td>{ }</td>
                             <td>
                                 <button className="edit-btn">Edit</button>
                                 <button className="delete-btn">Delete</button>
@@ -61,4 +61,4 @@ function Bank() {
     )
 }
 
-export default Bank
+export default Bank;

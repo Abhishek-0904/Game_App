@@ -31,6 +31,18 @@ const init = async () => {
             )
         `);
 
+        // Users Table
+        await pool.execute(`
+            CREATE TABLE IF NOT EXISTS Users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                username VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL UNIQUE,
+                password VARCHAR(255) NOT NULL,
+                createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            )
+        `);
+
         console.log("Tables created successfully!");
         process.exit();
     } catch (err) {

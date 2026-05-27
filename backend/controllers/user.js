@@ -4,6 +4,20 @@ const registerUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
+        // Basic validation
+        if (!username || !email || !password) {
+            return res.status(400).json({ message: "username, email and password are required" });
+        }
+
+        // Check DB connectivity before running queries
+        try {
+            const conn = await pool.getConnection();
+            conn.release();
+        } catch (dbErr) {
+            console.error('DB connection error during register:', dbErr);
+            return res.status(500).json({ message: 'Database connection error' });
+        }
+
         // Check if user already exists using raw query
         const [existingUsers] = await pool.execute(
             'SELECT * FROM Users WHERE email = ?',

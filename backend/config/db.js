@@ -19,8 +19,8 @@ const connectDB = async () => {
         console.log('MySQL Connected (Direct)...');
         connection.release();
     } catch (error) {
-        console.error('Unable to connect to the database:', error.message);
-        process.exit(1);
+        console.error('Unable to connect to the database:', error);
+        // Do not exit the process here to allow the server to start for debugging.
     }
 };
 

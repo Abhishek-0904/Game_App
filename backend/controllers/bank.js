@@ -23,6 +23,30 @@ const addbankdetails = async (req, res) => {
     }
 };
 
-module.exports = { getBankdetails, addbankdetails };
+
+const updateBankDetails = async (req, res) => {
+    const { id, account_holder_name, bank_name, account_number, ifsc_code } = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: "ID is required for update" });
+    }
+
+    const sql = "UPDATE bank_details SET account_holder_name = ?, bank_name = ?, account_number = ?, ifsc_code = ? WHERE id = ?";
+    try {
+        await pool.execute(sql, [
+            account_holder_name || null,
+            bank_name || null,
+            account_number || null,
+            ifsc_code || null,
+            id
+        ]);
+        res.status(200).json({ message: "Bank Details Updated Successfully" });
+    } catch (err) {
+        console.error("Error Updating Bank Details:", err);
+        res.status(500).json({ message: "Error Updating Bank Details" });
+    }
+};
+
+module.exports = { getBankdetails, addbankdetails, updateBankDetails };
 
 

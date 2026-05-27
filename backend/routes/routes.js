@@ -1,7 +1,7 @@
 const express = require("express");
 const { registerUser, loginUser } = require("../controllers/user");
-const { getBankdetails, addbankdetails } = require("../controllers/bank");
-const { getUpiDetails, addUpiDetails } = require("../controllers/upi");
+const { getBankdetails, addbankdetails, updateBankDetails } = require("../controllers/bank");
+const { getUpiDetails, addUpiDetails, updateUpiDetails } = require("../controllers/upi");
 
 const router = express.Router();
 
@@ -12,10 +12,12 @@ router.post("/login", loginUser);
 // Bank Routes
 router.get("/bank", getBankdetails);
 router.post("/bank", addbankdetails);
+router.put("/bank", updateBankDetails);
 
 // UPI Routes
 router.get("/upi", getUpiDetails);
 router.post("/upi", addUpiDetails);
+router.put("/upi", updateUpiDetails);
 
 module.exports = router;
 

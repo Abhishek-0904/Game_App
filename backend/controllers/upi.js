@@ -23,6 +23,29 @@ const addUpiDetails = async (req, res) => {
     }
 };
 
-module.exports = { getUpiDetails, addUpiDetails };
+const updateUpiDetails = async (req, res) => {
+    const { id, Phone_Number, Paytm_number, Google_pay_number, Upi_ID } = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: "ID is required for update" });
+    }
+
+    const sql = "UPDATE upi_details SET Phone_Number = ?, Paytm_number = ?, Google_pay_number = ?, Upi_ID = ? WHERE id = ?";
+    try {
+        await pool.execute(sql, [
+            Phone_Number || null,
+            Paytm_number || null,
+            Google_pay_number || null,
+            Upi_ID || null,
+            id
+        ]);
+        res.status(200).json({ message: "Upi Details Updated Successfully" });
+    } catch (err) {
+        console.error("Error Updating Upi Details:", err);
+        res.status(500).json({ message: "Error Updating Upi Details" });
+    }
+};
+
+module.exports = { getUpiDetails, addUpiDetails, updateUpiDetails };
 
 
