@@ -1,30 +1,34 @@
-const User = require('../models/usermodel');
+const { pool } = require('../config/db');
 
 const registerUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
-        // Check if user already exists
-        const existingUser = await User.findOne({ where: { email } });
+        // Check if user already exists using raw query
+        const [existingUsers] = await pool.execute(
+            'SELECT * FROM Users WHERE email = ?',
+            [email]
+        );
 
-        if (existingUser) {
+        if (existingUsers.length > 0) {
             return res.status(400).json({ message: "User already exists" });
         }
 
-        // Create new user (plain text for now as requested, but bcrypt is recommended)
-        const newUser = await User.create({
-            username,
-            email,
-            password
-        });
+        // Create new user using raw query
+        await pool.execute(
+            'INSERT INTO Users (username, email, password, createdAt, updatedAt) VALUES (?, ?, ?, NOW(), NOW())',
+            [username, email, password]
+        );
+
+        // Fetch the newly created user to return it
+        const [newUsers] = await pool.execute(
+            'SELECT id, username, email FROM Users WHERE email = ?',
+            [email]
+        );
 
         res.status(201).json({
             message: "User created successfully",
-            user: {
-                id: newUser.id,
-                username: newUser.username,
-                email: newUser.email
-            }
+            user: newUsers[0]
         });
     } catch (error) {
         console.error(error);
@@ -36,11 +40,17 @@ const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const user = await User.findOne({ where: { email } });
+        // Find user by email using raw query
+        const [users] = await pool.execute(
+            'SELECT * FROM Users WHERE email = ?',
+            [email]
+        );
 
-        if (!user) {
+        if (users.length === 0) {
             return res.status(400).json({ message: "Invalid User" });
         }
+
+        const user = users[0];
 
         // Check password (temporary plain-text comparison)
         const isMatch = (password === user.password);
@@ -64,3 +74,5 @@ const loginUser = async (req, res) => {
 };
 
 module.exports = { registerUser, loginUser };
+
+
