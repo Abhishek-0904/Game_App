@@ -12,10 +12,10 @@ const getBankdetails = async (req, res) => {
 };
 
 const addbankdetails = async (req, res) => {
-    const { account_holder_name, bank_name, account_number, ifsc_code } = req.body;
-    const sql = "INSERT INTO bank_details (account_holder_name, bank_name, account_number, ifsc_code) VALUES (?, ?, ?, ?)";
+    const { user_id, account_holder_name, bank_name, account_number, ifsc_code } = req.body;
+    const sql = "INSERT INTO bank_details (user_id, account_holder_name, bank_name, account_number, ifsc_code) VALUES (?, ?, ?, ?, ?)";
     try {
-        await pool.execute(sql, [account_holder_name, bank_name, account_number, ifsc_code]);
+        await pool.execute(sql, [user_id, account_holder_name, bank_name, account_number, ifsc_code]);
         res.status(200).json({ message: "Bank Details Added Successfully" });
     } catch (err) {
         console.error("Error Adding Bank Details:", err);
@@ -25,15 +25,16 @@ const addbankdetails = async (req, res) => {
 
 
 const updateBankDetails = async (req, res) => {
-    const { id, account_holder_name, bank_name, account_number, ifsc_code } = req.body;
+    const { id, user_id, account_holder_name, bank_name, account_number, ifsc_code } = req.body;
 
     if (!id) {
         return res.status(400).json({ message: "ID is required for update" });
     }
 
-    const sql = "UPDATE bank_details SET account_holder_name = ?, bank_name = ?, account_number = ?, ifsc_code = ? WHERE id = ?";
+    const sql = "UPDATE bank_details SET user_id = ?, account_holder_name = ?, bank_name = ?, account_number = ?, ifsc_code = ? WHERE id = ?";
     try {
         await pool.execute(sql, [
+            user_id || null,
             account_holder_name || null,
             bank_name || null,
             account_number || null,

@@ -36,7 +36,7 @@ const registerUser = async (req, res) => {
 
         // Fetch the newly created user to return it
         const [newUsers] = await pool.execute(
-            'SELECT id, username, email FROM Users WHERE email = ?',
+            'SELECT user_id, username, email FROM Users WHERE email = ?',
             [email]
         );
 
@@ -76,7 +76,7 @@ const loginUser = async (req, res) => {
         res.status(200).json({
             message: "Login successfully",
             user: {
-                id: user.id,
+                user_id: user.user_id,
                 username: user.username,
                 email: user.email
             }

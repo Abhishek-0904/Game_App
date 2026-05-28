@@ -12,10 +12,10 @@ const getUpiDetails = async (req, res) => {
 };
 
 const addUpiDetails = async (req, res) => {
-    const { Phone_Number, Paytm_number, Google_pay_number, Upi_ID } = req.body;
-    const sql = "INSERT INTO Upi_details (Phone_Number,Paytm_number,Google_pay_number,Upi_ID) VALUES (?, ?, ?, ?)";
+    const {user_id, Phone_Number, Paytm_number, Google_pay_number, Upi_ID } = req.body;
+    const sql = "INSERT INTO Upi_details (user_id, Phone_Number, Paytm_number, Google_pay_number, Upi_ID) VALUES (?, ?, ?, ?, ?)";
     try {
-        await pool.execute(sql, [Phone_Number, Paytm_number, Google_pay_number, Upi_ID]);
+        await pool.execute(sql, [user_id, Phone_Number, Paytm_number, Google_pay_number, Upi_ID]);
         res.status(200).json({ message: "Upi Details Added Successfully" });
     } catch (err) {
         console.error("Error Adding Upi Details:", err);
@@ -24,15 +24,16 @@ const addUpiDetails = async (req, res) => {
 };
 
 const updateUpiDetails = async (req, res) => {
-    const { id, Phone_Number, Paytm_number, Google_pay_number, Upi_ID } = req.body;
+    const { id, user_id, Phone_Number, Paytm_number, Google_pay_number, Upi_ID } = req.body;
 
     if (!id) {
         return res.status(400).json({ message: "ID is required for update" });
     }
 
-    const sql = "UPDATE upi_details SET Phone_Number = ?, Paytm_number = ?, Google_pay_number = ?, Upi_ID = ? WHERE id = ?";
+    const sql = "UPDATE upi_details SET user_id = ?, Phone_Number = ?, Paytm_number = ?, Google_pay_number = ?, Upi_ID = ? WHERE id = ?";
     try {
         await pool.execute(sql, [
+            user_id || null,
             Phone_Number || null,
             Paytm_number || null,
             Google_pay_number || null,
